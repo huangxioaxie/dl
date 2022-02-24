@@ -346,3 +346,92 @@ cd pytorch
 git config --global user.name "huangxioaxie"
 git config --global user.email 1247324842@qq.com
 ```
+
+
+
+
+
+# 最近用`thulac`分词发现很多小问题：
+
+1. 加载模型后会直接print一个模型加载成功，一来看它不爽，二来如果多进程的话，这样直接往stdout上print东西可能会有麻烦。
+2. 在`pythong>=3.8`版本以上会raise一个`AttributeError: module 'time' has no attribute 'clock'`，因为`time.clock`在3.8之后已经彻底被depracated了。
+3. 在`cut_f`函数打开非系统默认编码的文件会raise一个解码错误。例如在默认GBK编码的系统中给函数传入一个utf8的文件，会raise`UnicodeDecodeError: 'gbk' codec can't decode byte …… illegal multibyte sequence `。
+
+修改源码的话很简单，分别是：
+
+1. 注释掉print行
+2. 把time.clock改成time.pref_counter
+3. 给open函数加一个`encoding='xxx'`
+
+但是依赖修改源码对代码的可移植性是个破坏，所以记录一下不改源码的方案。
+
+以下思路都是把方法定义成context manager，以便把我们对系统做的小动作恢复原样，所以首先：
+
+```python3
+from contextlib import contextmanager
+```
+
+## 屏蔽print
+
+```python3
+from io import StringIO
+
+@contextmanager
+def redirect_stdout_to_null():
+    sys.stdout = NullIO()
+    try:
+        yield
+    finally:
+        sys.stdout = sys.__stdout__
+```
+
+之后可以使用下面方法来屏蔽掉输出
+
+```python3
+with redirect_stdout_to_null():
+    thu = thulac.thulac(seg_only=True, T2S=True)
+```
+
+## 修正time.clock问题
+
+```python3
+import time
+
+@contextmanager
+def add_clock_method_to_time():
+    py_gt_3_8 = not hasattr(time, "clock")
+    if py_gt_3_8:
+        setattr(time, "clock", time.perf_counter)
+    try:
+        yield
+    finally:
+        if py_gt_3_8:
+            delattr(time, "clock")
+```
+
+同理可以在出现`AttributeError`的地方使用`with add_clock_method_to_time()`语句。
+
+## 修正编码问题
+
+```python3
+@contextmanager
+def use_utf8_open():
+    from functools import partial
+    import builtins
+
+    builtin_open = open
+    utf8_open = partial(open, encoding="utf-8")
+    builtins.open = utf8_open
+
+    try:
+        yield
+    finally:
+        builtins.open = builtin_open
+```
+
+我这里直接改成了utf8，改成其他编码同理，之后就可以：
+
+```python3
+with use_utf8_open():
+    thu.cut_f(input,output)
+```
