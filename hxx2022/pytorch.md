@@ -1,8 +1,10 @@
 #### 日常启动
 
 ```
-cd Users\hys\Desktop\bishe\code\pythonwork\d2l-zh\pytorch
+cd \Users\hys\Desktop\bishe\code\pythonwork\d2l-zh\pytorch
 conda activate d2l
+Jupyter Notebook
+
 
 cd \pythonwork\d2l-zh\pytorch
 conda activate pytorch
