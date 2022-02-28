@@ -437,3 +437,9 @@ def use_utf8_open():
 with use_utf8_open():
     thu.cut_f(input,output)
 ```
+
+
+
+
+
+
