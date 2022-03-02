@@ -47,11 +47,13 @@ ACL、EMNLP、NAACL、COLING、ICLR、AAAI、CoNLL、NLPCC
 
 
 
+## 四大顶会
+
+https://dblp.uni-trier.de/
+
+**[ACL](https://www.aclweb.org/portal)**、**[EMNLP](http://emnlp2018.org/)**、**[NAACL](http://naacl.org/)**  AAAI COLING  IJCAI TACL  可以说是 NLP 领域的四大顶会
 
 
-**[ACL](https://www.aclweb.org/portal)**、**[EMNLP](http://emnlp2018.org/)**、**[NAACL](http://naacl.org/)**  可以说是 NLP 领域的四大顶会
-
-Kmeans文本聚类四步走
 
  步骤一、对文本进行切词和去除停用词。（jieba）
 **jieba分词对文本进行预处理，同时利用网上下的停用词文档结合正则表达式去除语气词和数字等，去除后的效果如下图所示：**

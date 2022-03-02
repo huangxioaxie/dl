@@ -11,6 +11,10 @@ conda activate pytorch
 
 
 Jupyter Notebook
+
+cd \Users\hys\Desktop\bert
+conda activate trans
+Jupyter Notebook
 ```
 
 
@@ -437,7 +441,6 @@ def use_utf8_open():
 with use_utf8_open():
     thu.cut_f(input,output)
 ```
-
 
 
 
