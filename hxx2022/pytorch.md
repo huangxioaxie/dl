@@ -8,8 +8,10 @@ Jupyter Notebook
 
 cd \pythonwork\d2l-zh\pytorch
 conda activate pytorch
+Jupyter Notebook
 
-
+cd \Users\hys\Desktop\bert
+conda activate trans
 Jupyter Notebook
 
 cd \Users\hys\Desktop\bert
